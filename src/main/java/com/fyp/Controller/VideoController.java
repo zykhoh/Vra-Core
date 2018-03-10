@@ -6,11 +6,14 @@ import com.fyp.Service.VideoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Date;
 
 @Controller
 @RequestMapping("/api")
@@ -36,8 +39,9 @@ public class VideoController {
     }
 
     @PostMapping("/videos/add")
-    public ResponseEntity<Video> addVideo(@RequestParam("file") MultipartFile videoFile, @RequestParam Video video) {
+    public ResponseEntity<Video> addVideo(@RequestParam("videoFile") MultipartFile videoFile, @RequestParam("title") String title, @RequestParam("date") @DateTimeFormat(pattern = "dd/MM/yyyy") Date date, @RequestParam("description") String description) {
 
+        Video video = new Video();
         storageService.store(videoFile);
         Video vid = videoService.saveVideo(video);
 
