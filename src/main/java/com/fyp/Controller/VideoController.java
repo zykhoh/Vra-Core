@@ -43,9 +43,10 @@ public class VideoController {
     public ResponseEntity<VideoIndex> addVideo(@RequestParam("videoFile") MultipartFile videoFile, @RequestParam("title") String title, @RequestParam("description") String description, @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
 
         Video video = new Video(title, description, date, videoFile.getOriginalFilename());
-        VideoIndex videoIndex = new VideoIndex(video.getId(), video.getTitle(), video.getDescription(), video.getDate());
+
         storageService.store(videoFile);
         Video vid = videoService.saveVideo(video);
+        VideoIndex videoIndex = new VideoIndex(vid.getId(), vid.getTitle(), vid.getDescription(), vid.getDate());
         VideoIndex vidIndex = videoService.saveVideoIndex(videoIndex);
 
         return new ResponseEntity<>(vidIndex, HttpStatus.ACCEPTED);
