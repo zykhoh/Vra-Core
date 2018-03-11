@@ -2,11 +2,10 @@ package com.fyp.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -24,21 +23,21 @@ public class Video {
     @NotBlank
     private String description;
 
-    @NotBlank
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
-    @Column(nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date createdAt;
-
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @LastModifiedDate
-    private Date updatedAt;
+    @NotBlank
+    private String videoUrl;
 
     public Video() {
+    }
+
+    public Video(String title, String description, Date date, String videoUrl) {
+        this.title = title;
+        this.description = description;
+        this.date = date;
+        this.videoUrl = videoUrl;
     }
 
     public Long getId() {
@@ -73,20 +72,12 @@ public class Video {
         this.date = date;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public String getVideoUrl() {
+        return videoUrl;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
 }

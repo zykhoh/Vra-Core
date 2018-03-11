@@ -22,7 +22,7 @@ public class StorageService {
         try {
             Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
         } catch (Exception e) {
-            throw new RuntimeException("Failed to store file!!");
+            throw new RuntimeException("This video already existed!!");
         }
     }
 

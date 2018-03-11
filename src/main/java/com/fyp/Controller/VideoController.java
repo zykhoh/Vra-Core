@@ -39,9 +39,9 @@ public class VideoController {
     }
 
     @PostMapping("/videos/add")
-    public ResponseEntity<Video> addVideo(@RequestParam("videoFile") MultipartFile videoFile, @RequestParam("title") String title, @RequestParam("date") @DateTimeFormat(pattern = "dd/MM/yyyy") Date date, @RequestParam("description") String description) {
+    public ResponseEntity<Video> addVideo(@RequestParam("videoFile") MultipartFile videoFile, @RequestParam("title") String title, @RequestParam("description") String description, @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
 
-        Video video = new Video();
+        Video video = new Video(title, description, date, videoFile.getOriginalFilename());
         storageService.store(videoFile);
         Video vid = videoService.saveVideo(video);
 
