@@ -1,5 +1,6 @@
 package com.fyp.Controller;
 
+import com.fyp.Model.Solr.VideoIndex;
 import com.fyp.Model.Video;
 import com.fyp.Service.StorageService;
 import com.fyp.Service.VideoService;
@@ -39,16 +40,18 @@ public class VideoController {
     }
 
     @PostMapping("/videos/add")
-    public ResponseEntity<Video> addVideo(@RequestParam("videoFile") MultipartFile videoFile, @RequestParam("title") String title, @RequestParam("description") String description, @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+    public ResponseEntity<VideoIndex> addVideo(@RequestParam("videoFile") MultipartFile videoFile, @RequestParam("title") String title, @RequestParam("description") String description, @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
 
         Video video = new Video(title, description, date, videoFile.getOriginalFilename());
+        VideoIndex videoIndex = new VideoIndex(video.getId(), video.getTitle(), video.getDescription(), video.getDate());
         storageService.store(videoFile);
         Video vid = videoService.saveVideo(video);
+        VideoIndex vidIndex = videoService.saveVideoIndex(videoIndex);
 
-        return new ResponseEntity<>(vid, HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(vidIndex, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("videos/{id}")
+    @GetMapping("/videos/{id}")
     public ResponseEntity<Video> video(@PathVariable("id") Long videoId){
 
         Video video = videoService.findOne(videoId);
@@ -56,6 +59,13 @@ public class VideoController {
         if (video != null) {
             return new ResponseEntity<>(video, HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    }
+
+    @GetMapping("/videos/search")
+    public ResponseEntity<VideoIndex> findByTitleOrDescription(String searchTerm){
+
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
     }
