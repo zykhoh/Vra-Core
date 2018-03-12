@@ -26,19 +26,19 @@ public class StorageService {
         }
     }
 
-    public Resource loadFile(String filename) {
-        try {
-            Path file = rootLocation.resolve(filename);
-            Resource resource = new UrlResource(file.toUri());
-            if(resource.exists() || resource.isReadable()) {
-                return resource;
-            }else{
-                throw new RuntimeException("The file requested doesn't exist!!");
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException("Failed to load file!!");
-        }
-    }
+//    public Resource loadFile(String filename) {
+//        try {
+//            Path file = rootLocation.resolve(filename);
+//            Resource resource = new UrlResource(file.toUri());
+//            if(resource.exists() || resource.isReadable()) {
+//                return resource;
+//            }else{
+//                throw new RuntimeException("The file requested doesn't exist!!");
+//            }
+//        } catch (MalformedURLException e) {
+//            throw new RuntimeException("Failed to load file!!");
+//        }
+//    }
 
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(rootLocation.toFile());
