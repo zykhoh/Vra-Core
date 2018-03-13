@@ -5,6 +5,9 @@ import com.fyp.Model.Video;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public interface VideoService {
 
     Page<Video> listAllByPage(Pageable pageable);
@@ -15,5 +18,7 @@ public interface VideoService {
 
     Video findOne(Long videoId);
 
-    Page<VideoIndex> findByTitleOrDescription(String title, String description, Pageable pageable);
+    Page<VideoIndex> findByTitleContainsOrDescriptionContains(List<String> title, List<String> description, Pageable pageable);
+
+    Page<VideoIndex> findByDateIsNear(List<LocalDate> dates, Pageable pageable);
 }
