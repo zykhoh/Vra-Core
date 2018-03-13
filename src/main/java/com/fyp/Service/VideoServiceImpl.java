@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional
@@ -45,8 +47,13 @@ public class VideoServiceImpl implements VideoService{
     }
 
     @Override
-    public Page<VideoIndex> findByTitleOrDescription(String title, String description, Pageable pageable) {
-        return videoIndexRepository.findByTitleOrDescription(title, description, pageable);
+    public Page<VideoIndex> findByTitleContainsOrDescriptionContains(List<String> title, List<String> description, Pageable pageable) {
+        return videoIndexRepository.findByTitleContainsOrDescriptionContains(title, description, pageable);
+    }
+
+    @Override
+    public Page<VideoIndex> findByDateIsNear(List<LocalDate> dates, Pageable pageable) {
+        return videoIndexRepository.findByDateIs(dates, pageable);
     }
 
 }
