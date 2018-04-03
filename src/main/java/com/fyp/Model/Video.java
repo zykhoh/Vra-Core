@@ -1,6 +1,5 @@
 package com.fyp.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,8 +9,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "videos")
-@JsonIgnoreProperties(value = {"createdAt", "updatedAt"},
-        allowGetters = true)
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,14 +27,22 @@ public class Video {
     @NotBlank
     private String videoUrl;
 
+    @NotBlank
+    private String imageFolder;
+
+    @NotBlank
+    private String predictedFolder;
+
     public Video() {
     }
 
-    public Video(String title, String description, Date date, String videoUrl) {
+    public Video(String title, String description, Date date, String videoUrl, String imageFolder, String predictedFolder) {
         this.title = title;
         this.description = description;
         this.date = date;
         this.videoUrl = videoUrl;
+        this.imageFolder = imageFolder;
+        this.predictedFolder = predictedFolder;
     }
 
     public Long getId() {
@@ -80,4 +85,19 @@ public class Video {
         this.videoUrl = videoUrl;
     }
 
+    public String getImageFolder() {
+        return imageFolder;
+    }
+
+    public void setImageFolder(String imageFolder) {
+        this.imageFolder = imageFolder;
+    }
+
+    public String getPredictedFolder() {
+        return predictedFolder;
+    }
+
+    public void setPredictedFolder(String predictedFolder) {
+        this.predictedFolder = predictedFolder;
+    }
 }
