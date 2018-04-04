@@ -13,12 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -67,6 +69,13 @@ public class SearchController {
         List<ImageIndex> list = imageService.findByAnnotation(searchTerm, new PageRequest(noOfPage, pageSize));
 
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @GetMapping("/facet")
+    public ResponseEntity<Collection<String>> facetAnnotation() {
+        Collection<String> annotations = imageService.findAllAndFacetByAnnotation(new PageRequest(noOfPage, pageSize));
+
+        return new ResponseEntity<>(annotations, HttpStatus.OK);
     }
 
 

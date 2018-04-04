@@ -7,9 +7,12 @@ import com.fyp.Repository.IImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -48,5 +51,17 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<ImageIndex> findByAnnotation(String annotation, Pageable pageable) {
         return imageIndexRepository.findByAnnotation(annotation, pageable);
+    }
+
+    @Override
+    public Collection<String> findAllAndFacetByAnnotation(Pageable pageable) {
+
+        Collection<String> annotation = new ArrayList<>();
+        FacetPage<ImageIndex> results = imageIndexRepository.findAllAndFacetByAnnotation(pageable);
+        results.getFacetResultPage("annotation").getContent().forEach(
+                content -> annotation.add(content.getValue())
+        );
+
+        return annotation;
     }
 }

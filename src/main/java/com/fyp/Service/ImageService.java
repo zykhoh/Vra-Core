@@ -5,6 +5,7 @@ import com.fyp.Model.Solr.ImageIndex;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ImageService {
@@ -18,5 +19,7 @@ public interface ImageService {
     Image findOne(Long imageId);
 
     List<ImageIndex> findByAnnotation(String annotation, Pageable pageable);
+
+    Collection<String> findAllAndFacetByAnnotation(Pageable pageable);
 
 }
