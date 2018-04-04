@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -42,5 +43,10 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image findOne(Long imageId) {
         return imageRepository.findOne(imageId);
+    }
+
+    @Override
+    public List<ImageIndex> findByAnnotation(String annotation, Pageable pageable) {
+        return imageIndexRepository.findByAnnotation(annotation, pageable);
     }
 }
