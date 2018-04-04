@@ -36,8 +36,6 @@ public class VideoController {
 
     private StorageService storageService;
 
-    private SearchTermParserService searchTermParserService;
-
     private ExecutorService executorService;
 
     private ObjectDetector objectDetector;
@@ -45,11 +43,10 @@ public class VideoController {
     private ImageService imageService;
 
     @Autowired
-    public VideoController(VideoService videoService, StorageService storageService, SearchTermParserService searchTermParserService, ApplicationProperties applicationProperties, ObjectDetector objectDetector, ImageService imageService) {
+    public VideoController(VideoService videoService, StorageService storageService, ApplicationProperties applicationProperties, ObjectDetector objectDetector, ImageService imageService) {
         this.applicationProperties = applicationProperties;
         this.videoService = videoService;
         this.storageService = storageService;
-        this.searchTermParserService = searchTermParserService;
         this.executorService = Executors.newFixedThreadPool(applicationProperties.getNoOfThread());
         this.objectDetector = objectDetector;
         this.imageService = imageService;
@@ -92,26 +89,6 @@ public class VideoController {
             return new ResponseEntity<>(video, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-    }
-
-    @PostMapping("/search")
-    public ResponseEntity<Page<VideoIndex>> findByTitleContainsOrDescriptionContains(@RequestParam(value = "searchTerm", required = false) String searchTerm, Pageable pageable) {
-
-        Page<VideoIndex> videoIndex;
-        String[] words = searchTermParserService.tokenizeSearchTerm(searchTerm);
-        List<String> wordList = Arrays.asList(words);
-
-        if (searchTermParserService.hasDate(words)) {
-            List<LocalDate> dateList = searchTermParserService.trimSearchTerms(wordList);
-            videoIndex = videoService.findByDateIsNear(dateList, pageable);
-        }else {
-            wordList = searchTermParserService.removePunctuationMark(wordList);
-            videoIndex = videoService.findByTitleContainsOrDescriptionContains(wordList, wordList, pageable);
-        }
-
-
-        return new ResponseEntity<>(videoIndex, HttpStatus.OK);
 
     }
 

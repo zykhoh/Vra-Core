@@ -17,6 +17,8 @@ public class ApplicationProperties {
     private String predictedImageFolder;
     private int noOfThread;
     private String vraDir;
+    private int pageSize;
+    private int noOfPage;
 
     public String getGraph() {
         return graph;
@@ -120,5 +122,21 @@ public class ApplicationProperties {
 
     public void setVraDir(String vraDir) {
         this.vraDir = vraDir;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public int getNoOfPage() {
+        return noOfPage;
+    }
+
+    public void setNoOfPage(int noOfPage) {
+        this.noOfPage = noOfPage;
     }
 }
