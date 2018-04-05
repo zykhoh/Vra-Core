@@ -75,7 +75,7 @@ public class ObjectDetector {
 
             String labeledFilePath = ImageUtil.getInstance(applicationProperties).labelImage(image, recognitions, IOUtil.getFileName(imageLocation), outputDir);
 
-            Map<String, Object> result = new HashMap();
+            Map<String, Object> result = new HashMap<>();
             result.put("labeledFilePath", labeledFilePath);
             result.put("recognitions", recognitionList);
             return result;

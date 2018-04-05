@@ -10,18 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.solr.core.query.result.FacetPage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/api/search")
@@ -64,16 +63,23 @@ public class SearchController {
     }
 
     @PostMapping("/image")
-    public ResponseEntity<List<ImageIndex>> imageSearch(@RequestParam("annotation") String searchTerm) {
+    public ResponseEntity<Page<ImageIndex>> imageSearch(@RequestParam("annotation") String searchTerm) {
 
-        List<ImageIndex> list = imageService.findByAnnotation(searchTerm, new PageRequest(noOfPage, pageSize));
+        Page<ImageIndex> list = imageService.findByAnnotation(searchTerm, new PageRequest(noOfPage, pageSize));
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/facet")
     public ResponseEntity<Collection<String>> facetAnnotation() {
-        Collection<String> annotations = imageService.findAllAndFacetByAnnotation(new PageRequest(noOfPage, pageSize));
+        Collection<String> annotations = imageService.findAllFacetByAnnotation(new PageRequest(noOfPage, pageSize));
+
+        return new ResponseEntity<>(annotations, HttpStatus.OK);
+    }
+
+    @GetMapping("/facet/{id}")
+    public ResponseEntity<Map<String, Object>> findImageIndexByIdAndFacetByAnnotation(@PathVariable("id") Long videoId) {
+        Map<String, Object> annotations = imageService.findByVideoIdAndFacetByAnnotation(videoId, new PageRequest(noOfPage, pageSize));
 
         return new ResponseEntity<>(annotations, HttpStatus.OK);
     }

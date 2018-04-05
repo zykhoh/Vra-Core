@@ -89,10 +89,10 @@ public class Indexing implements Runnable {
                 }
             }
 
-            Image newImage = new Image(video.getVideoUrl(), inputFilePath, outputFilePath, Integer.parseInt(file.getName().substring(0, file.getName().lastIndexOf("."))));
+            Image newImage = new Image(video.getId(), video.getVideoUrl(), inputFilePath, outputFilePath, Integer.parseInt(file.getName().substring(0, file.getName().lastIndexOf("."))));
 
             Image image = imageService.saveImage(newImage);
-            ImageIndex imageIndex = new ImageIndex(image.getId(), image.getVideoUrl(), image.getImageUrl(), image.getPredictedImageUrl(), image.getCurTime());
+            ImageIndex imageIndex = new ImageIndex(image.getId(), video.getId(), image.getVideoUrl(), image.getImageUrl(), image.getPredictedImageUrl(), image.getCurTime());
 
             if (!annotation.isEmpty()) {
                 imageIndex.setAnnotation(annotation);
