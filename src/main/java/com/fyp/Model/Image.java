@@ -9,6 +9,8 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long videoId;
+
     private String videoUrl;
 
     private String imageUrl;
@@ -19,7 +21,8 @@ public class Image {
 
     public Image() {}
 
-    public Image(String videoUrl, String imageUrl, String predictedImageUrl, Integer curTime) {
+    public Image(Long videoId, String videoUrl, String imageUrl, String predictedImageUrl, Integer curTime) {
+        this.videoId = videoId;
         this.videoUrl = videoUrl;
         this.imageUrl = imageUrl;
         this.predictedImageUrl = predictedImageUrl;
@@ -32,6 +35,14 @@ public class Image {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(Long videoId) {
+        this.videoId = videoId;
     }
 
     public String getVideoUrl() {

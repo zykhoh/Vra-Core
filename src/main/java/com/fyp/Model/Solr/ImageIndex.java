@@ -2,6 +2,7 @@ package com.fyp.Model.Solr;
 
 import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import java.util.ArrayList;
@@ -12,6 +13,9 @@ public class ImageIndex {
     @Id
     @Field
     private Long id;
+
+    @Field
+    private Long videoId;
 
     @Field
     private String videoUrl;
@@ -26,12 +30,14 @@ public class ImageIndex {
     private Integer curTime;
 
     @Field
+    @Indexed
     private ArrayList<String> annotation;
 
     public ImageIndex() {}
 
-    public ImageIndex(Long id, String videoUrl, String imageUrl, String predictedImageUrl, Integer curTime) {
+    public ImageIndex(Long id, Long videoId, String videoUrl, String imageUrl, String predictedImageUrl, Integer curTime) {
         this.id = id;
+        this.videoId = videoId;
         this.videoUrl = videoUrl;
         this.imageUrl = imageUrl;
         this.predictedImageUrl = predictedImageUrl;
@@ -44,6 +50,14 @@ public class ImageIndex {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(Long videoId) {
+        this.videoId = videoId;
     }
 
     public String getVideoUrl() {
