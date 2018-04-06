@@ -54,8 +54,6 @@ public class StorageService {
     public void deleteAll() {
         FileSystemUtils.deleteRecursively(videoRootLocation.toFile());
         FileSystemUtils.deleteRecursively(imageRootLocation.toFile());
-        FileSystemUtils.deleteRecursively(uploadDir.toFile());
-        FileSystemUtils.deleteRecursively(predictedImageRootLocation.toFile());
     }
 
     public void init() {
