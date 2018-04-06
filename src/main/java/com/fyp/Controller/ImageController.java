@@ -33,6 +33,7 @@ public class ImageController {
     public ResponseEntity<Map<String, Object>> detect(@RequestParam("Image") MultipartFile imageFile) {
         String originalImagePath = IMAGE_ROOT + storageService.storeImage(imageFile);
         Map<String, Object> result = objectDetector.detect(originalImagePath);
+        result.put("originalImagePath", originalImagePath);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
