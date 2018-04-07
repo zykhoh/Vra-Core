@@ -13,7 +13,7 @@ import java.util.List;
 public interface IImageIndexRepository extends SolrCrudRepository<ImageIndex, String> {
 
     @Query("annotation:?0")
-    Page<ImageIndex> findByAnnotation(String annotation, Pageable pageable);
+    Page<ImageIndex> findByAnnotation(List<String> annotation, Pageable pageable);
 
     @Query("*:*")
     @Facet(fields = {"annotation"})

@@ -47,8 +47,8 @@ public class VideoServiceImpl implements VideoService{
     }
 
     @Override
-    public Page<VideoIndex> findByTitleContainsOrDescriptionContains(List<String> title, List<String> description, Pageable pageable) {
-        return videoIndexRepository.findByTitleContainsOrDescriptionContains(title, description, pageable);
+    public Page<VideoIndex> findByTitleLikeOrDescriptionLike(List<String> title, List<String> description, Pageable pageable) {
+        return videoIndexRepository.findByTitleContainingOrDescriptionContaining(title, description, pageable);
     }
 
     @Override

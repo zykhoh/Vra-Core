@@ -53,8 +53,7 @@ public class SearchController {
             List<LocalDate> dateList = searchTermParserService.trimSearchTerms(wordList);
             videoIndex = videoService.findByDateIsNear(dateList, pageable);
         }else {
-            wordList = searchTermParserService.removePunctuationMark(wordList);
-            videoIndex = videoService.findByTitleContainsOrDescriptionContains(wordList, wordList, pageable);
+            videoIndex = videoService.findByTitleLikeOrDescriptionLike(wordList, wordList, pageable);
         }
 
         return new ResponseEntity<>(videoIndex, HttpStatus.OK);
@@ -62,9 +61,14 @@ public class SearchController {
     }
 
     @PostMapping("/image")
-    public ResponseEntity<Page<ImageIndex>> imageSearch(@RequestParam("annotation") String searchTerm) {
+    public ResponseEntity<Page<ImageIndex>> imageSearch(@RequestParam("searchTerm") String searchTerm) {
+        String[] words = searchTermParserService.tokenizeSearchTerm(searchTerm);
+        List<String> wordList = Arrays.asList(words);
+        Page<ImageIndex> list = null;
 
-        Page<ImageIndex> list = imageService.findByAnnotation(searchTerm, new PageRequest(noOfPage, pageSize));
+        if (!searchTermParserService.hasDate(words)) {
+            list = imageService.findByAnnotation(wordList, new PageRequest(noOfPage, pageSize));
+        }
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }

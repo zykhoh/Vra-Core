@@ -22,17 +22,25 @@ public class VideoIndex {
     @Field
     private Date date;
 
+    @Field
+    private String videoUrl;
+
     public VideoIndex() {}
 
-    public VideoIndex(Long id, String title, String description, Date date) {
+    public VideoIndex(Long id, String title, String description, Date date, String videoUrl) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.date = date;
+        this.videoUrl = videoUrl;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -57,6 +65,14 @@ public class VideoIndex {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
 }
