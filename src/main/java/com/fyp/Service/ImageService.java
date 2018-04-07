@@ -20,7 +20,7 @@ public interface ImageService {
 
     Image findOne(Long imageId);
 
-    Page<ImageIndex> findByAnnotation(String annotation, Pageable pageable);
+    Page<ImageIndex> findByAnnotation(List<String> annotation, Pageable pageable);
 
     Collection<String> findAllFacetByAnnotation(Pageable pageable);
 

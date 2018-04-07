@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface IVideoIndexRepository extends SolrCrudRepository<VideoIndex, String> {
 
-    Page<VideoIndex> findByTitleContainsOrDescriptionContains(@Boost(2) List<String> title, List<String> description, Pageable pageable);
+    Page<VideoIndex> findByTitleContainingOrDescriptionContaining(List<String> title, List<String> description, Pageable pageable);
 
     @Query(value = "date\\:\\[\\?0\\]")
     Page<VideoIndex> findByDateIs(@DateTimeFormat(pattern = "yyyy-MM-dd") List<LocalDate> dates, Pageable pageable);

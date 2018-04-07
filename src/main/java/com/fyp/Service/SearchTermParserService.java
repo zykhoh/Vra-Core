@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class SearchTermParserService {
 
-    private static final String dateFormat = "yyyy/dd/MM";
+    private static final String dateFormat = "dd/MM/yyyy";
 
     public String[] tokenizeSearchTerm(String searchTerm) {
         searchTerm = searchTerm.toLowerCase();
@@ -22,7 +22,7 @@ public class SearchTermParserService {
     public List<String> removePunctuationMark(List<String> searchTerms) {
         for (int i = 0; i < searchTerms.size(); i++) {
             //remove punctuation mark
-            searchTerms.set(i, searchTerms.get(i).replaceAll("[^\\w]", ""));
+            searchTerms.set(i, searchTerms.get(i).replaceAll("[^\\w]", " "));
         }
         return searchTerms;
     }

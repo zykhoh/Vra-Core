@@ -18,7 +18,7 @@ public interface VideoService {
 
     Video findOne(Long videoId);
 
-    Page<VideoIndex> findByTitleContainsOrDescriptionContains(List<String> title, List<String> description, Pageable pageable);
+    Page<VideoIndex> findByTitleLikeOrDescriptionLike(List<String> title, List<String> description, Pageable pageable);
 
     Page<VideoIndex> findByDateIsNear(List<LocalDate> dates, Pageable pageable);
 }

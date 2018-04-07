@@ -52,7 +52,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Page<ImageIndex> findByAnnotation(String annotation, Pageable pageable) {
+    public Page<ImageIndex> findByAnnotation(List<String> annotation, Pageable pageable) {
         return imageIndexRepository.findByAnnotation(annotation, pageable);
     }
 
