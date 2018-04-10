@@ -74,7 +74,7 @@ public class VideoController {
 
         executorService.execute(new Indexing(applicationProperties, video, objectDetector, imageService));
 
-        VideoIndex videoIndex = new VideoIndex(vid.getId(), vid.getTitle(), vid.getDescription(), vid.getDate(), vid.getVideoUrl());
+        VideoIndex videoIndex = new VideoIndex(vid.getId(), vid.getTitle(), vid.getDescription(), vid.getDate(), vid.getVideoUrl(), vid.getImageFolder());
         VideoIndex vidIndex = videoService.saveVideoIndex(videoIndex);
 
         return new ResponseEntity<>(vidIndex, HttpStatus.ACCEPTED);

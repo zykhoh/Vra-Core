@@ -15,7 +15,6 @@ public class SearchTermParserService {
     private static final String dateFormat = "dd/MM/yyyy";
 
     public String[] tokenizeSearchTerm(String searchTerm) {
-        searchTerm = searchTerm.toLowerCase();
         return searchTerm.split("\\s+");
     }
 
