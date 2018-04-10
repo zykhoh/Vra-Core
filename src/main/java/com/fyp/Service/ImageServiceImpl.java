@@ -112,10 +112,13 @@ public class ImageServiceImpl implements ImageService {
                 for (String annot: index.getAnnotation()) {
                     if (annot.equals(annotation)) {
                         list.add(index.getCurTime());
+                        break;
                     }
                 }
             }
         }
+
+        Collections.sort(list);
 
         return list;
     }
