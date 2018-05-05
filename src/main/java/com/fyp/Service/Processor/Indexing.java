@@ -9,11 +9,22 @@ import com.fyp.Service.ImageService;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
 import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.semanticmetadata.lire.imageanalysis.features.GlobalFeature;
+import net.semanticmetadata.lire.imageanalysis.features.LireFeature;
+import net.semanticmetadata.lire.imageanalysis.features.global.*;
+import net.semanticmetadata.lire.indexers.hashing.BitSampling;
+import net.semanticmetadata.lire.solr.indexing.ParallelSolrIndexer;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Indexing implements Runnable {
@@ -21,6 +32,20 @@ public class Indexing implements Runnable {
     private String FFMPEG_ROOT;
 
     private String FILES_ROOT;
+
+    private LireFeature[] listOfFeatures = new LireFeature[]{
+            new ColorLayout(), new PHOG(), new EdgeHistogram(), new JCD(), new OpponentHistogram()
+    };
+
+    private static HashMap<Class, String> classToPrefix = new HashMap<Class, String>(5);
+
+    static {
+        classToPrefix.put(ColorLayout.class, "cl");
+        classToPrefix.put(EdgeHistogram.class, "eh");
+        classToPrefix.put(PHOG.class, "ph");
+        classToPrefix.put(OpponentHistogram.class, "oh");
+        classToPrefix.put(JCD.class, "jc");
+    }
 
     private Video video;
 
@@ -31,6 +56,8 @@ public class Indexing implements Runnable {
     private ObjectDetector objectDetector;
 
     private ImageService imageService;
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(Indexing.class);
 
     @Autowired
     public Indexing(final ApplicationProperties applicationProperties, Video video, ObjectDetector objectDetector, ImageService imageService) {
@@ -45,8 +72,12 @@ public class Indexing implements Runnable {
 
     @Override
     public void run() {
+        Long start = System.currentTimeMillis();
         split();
         extract();
+        Long end = System.currentTimeMillis();
+
+        System.out.println("Took: " + ((end - start) / 1000) + "s");
     }
 
     private void split() {
@@ -77,6 +108,13 @@ public class Indexing implements Runnable {
             String inputFilePath = file.getPath();
             String outputFilePath = null;
             ArrayList<String> annotation = new ArrayList<String>();
+            BufferedImage img = null;
+
+            try {
+                img = ImageIO.read(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             Map<String, Object> result = objectDetector.detect(inputFilePath, ImageOutputRoot);
 
@@ -96,6 +134,50 @@ public class Indexing implements Runnable {
 
             if (!annotation.isEmpty()) {
                 imageIndex.setAnnotation(annotation);
+            }
+
+            for (int i = 0; i < listOfFeatures.length; i++) {
+
+                LireFeature feature = listOfFeatures[i];
+                ((GlobalFeature) feature).extract(img);
+                try {
+                    BitSampling.readHashFunctions();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (classToPrefix.get(feature.getClass()) == "cl") {
+
+                    System.out.println("Extracting ColorLayout...");
+                    imageIndex.setCl_hi(Base64.encodeBase64String(feature.getByteArrayRepresentation()));
+                    imageIndex.setCl_ha(ParallelSolrIndexer.arrayToString(BitSampling.generateHashes(((GlobalFeature) feature).getFeatureVector())));
+
+                }else if (classToPrefix.get(feature.getClass()) == "eh") {
+
+                    System.out.println("Extracting EdgeHistogram...");
+                    imageIndex.setEh_hi(Base64.encodeBase64String(feature.getByteArrayRepresentation()));
+                    imageIndex.setEh_ha(ParallelSolrIndexer.arrayToString(BitSampling.generateHashes(((GlobalFeature) feature).getFeatureVector())));
+
+                }else if (classToPrefix.get(feature.getClass()) == "ph") {
+
+                    System.out.println("Extracting PHOG...");
+                    imageIndex.setPh_hi(Base64.encodeBase64String(feature.getByteArrayRepresentation()));
+                    imageIndex.setPh_ha(ParallelSolrIndexer.arrayToString(BitSampling.generateHashes(((GlobalFeature) feature).getFeatureVector())));
+
+                }else if (classToPrefix.get(feature.getClass()) == "oh") {
+
+                    System.out.println("Extracting OpponentHistogram...");
+                    imageIndex.setOh_hi(Base64.encodeBase64String(feature.getByteArrayRepresentation()));
+                    imageIndex.setOh_ha(ParallelSolrIndexer.arrayToString(BitSampling.generateHashes(((GlobalFeature) feature).getFeatureVector())));
+
+                }else {
+
+                    System.out.println("Extracting JCD...");
+                    imageIndex.setJc_hi(Base64.encodeBase64String(feature.getByteArrayRepresentation()));
+                    imageIndex.setJc_ha(ParallelSolrIndexer.arrayToString(BitSampling.generateHashes(((GlobalFeature) feature).getFeatureVector())));
+
+                }
+
             }
 
             imageService.saveImageIndex(imageIndex);
